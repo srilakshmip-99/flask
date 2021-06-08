@@ -1,0 +1,122 @@
+{% extends "base.html"%}
+{% block content %}
+<center>
+    <h1>Library Management</h1>
+</center><br>
+<div class='container'>
+    <div class="row">
+        <div class="col md-12">
+            <div class="jumbotron p-3">
+                <h3>
+                    <b>Manage Library</b>
+                    <button type="button" class="btn btn-primary float-right"
+                    data-toggle="modal" data-target="#mymodal">Add New Book</button>
+                </h3><br>
+
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                {% for message in messages %}
+                {{message}}
+                {%endfor%}
+                {%endif%}
+                {%endwith%}
+
+                <table class="table table-hover table-dark">
+                    <tr>
+                        <th>Book Id </th>
+                        <th>Title </th>
+                        <th>Author </th>
+                        <th>Publisher </th>
+                         <th>Action</th>
+                    </tr>
+                    {% for row in book %}
+                    <tr>
+                        <td>{{row.book_id}}</td>
+                        <td>{{row.title}}</td>
+                        <td>{{row.author}}</td>
+                        <td>{{row.publisher}}</td>
+                        <td>
+                            <a href="/update/{{row.book_id}}" class="btn btn-success btn-xs" data-toggle="modal" data-target="#modaledit{{row.book_id}}">Edit</a>
+                            <a href="/delete/{{row.book_id}}" class="btn btn-info btn-xs" onClick = "return confirm('Are you sure you want to Delete?')">Delete</a>
+                        </td>
+                    </tr>
+                    <!--Edit Book-->
+                    <div id="modaledit{{row.book_id}}" class="modal fade" role="dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                <h4 class="modal-title">Edit Book</h4>
+                            </div>
+                            <div class="modal-body">
+                                <form action="{{url_for('update')}}" method="POST">
+                                <div class="form-group">     
+                                    <input type="hidden" class="form-control" name="book_id" value="{{row.book_id}}">
+                                </div>
+                                <div class="form-group">
+                                    <label>Title:</label>
+                                    <input type="text" class="form-control" name="title" value="{{row.title}}">
+                                </div> 
+                                <div class="form-group">
+                                    <label>Author:</label>
+                                    <input type="text" class="form-control" name="author" value="{{row.author}}">
+                                </div>
+                                 <div class="form-group">
+                                    <label>Publisher:</label>
+                                    <input type="text" class="form-control" name="publisher" value="{{row.publisher}}">
+                                </div>
+                                <div class="form-group">
+                                    <button class="btn btn-primary" type="submit">Update</button>       
+                               </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+
+                    {% endfor %}
+
+                </table>
+                <!--Add Book-->
+                <div id="mymodal" class="modal fade" role="dialog">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Add New Book</h4>
+                            </div>
+                            <div class="modal-body">
+                                <form action="{{url_for('insert')}}" method="POST">
+                                <div class="form-group">     
+                                    <label>Book Id:</label>
+                                    <input type="text" class="form-control" name="book_id" required="1">
+                                </div>
+                                <div class="form-group">
+                                    <label>Title:</label>
+                                    <input type="text" class="form-control" name="title" required="1">
+                                </div> 
+                                <div class="form-group">
+                                    <label>Author:</label>
+                                    <input type="text" class="form-control" name="author" required="1">
+                                </div>
+                                 <div class="form-group">
+                                    <label>Publisher:</label>
+                                    <input type="text" class="form-control" name="publisher" required="1">
+                                </div>
+                                <div class="form-group">
+                                     <button class="btn btn-primary" type="submit">Add Book</button>       
+                                </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+        </div>
+    </div> 
+</div>
+{% endblock %}
